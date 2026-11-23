@@ -71,18 +71,18 @@ float sharpen(in float d, in float w)
     return 1. - smoothstep(-e, e, d - w);
 }
 
-// Coordenadas baricêntricas de p em relação ao triângulo (a, b, c).
+// Coordenadas baricêntricas de p em relação ao triângulo (a, b, c)
 // Os pontos chegam como vec3(x, 0, y), então o plano 2D é o plano XZ:
-// o "y" do ponto 2D está guardado na componente z.
+// o y do ponto 2D está guardado na componente z
 // Retorna vec3(alpha1, alpha2, alpha3) tal que  p = alpha1*a + alpha2*b + alpha3*c
-// e alpha1 + alpha2 + alpha3 = 1.
+// e alpha1 + alpha2 + alpha3 = 1
 vec3 bary(in vec3 a, in vec3 b, in vec3 c, in vec3 p)
 {
-    // Denominador comum (2x a área com sinal do triângulo).
-    // Se o triângulo for degenerado (área 0), não dá pra calcular.
+    // Denominador comum (2x a área com sinal do triângulo)
+    // Se o triângulo for degenerado (área 0), não dá pra calcular
     float den = (b.z - c.z) * (a.x - c.x) + (c.x - b.x) * (a.z - c.z);
     if (abs(den) < 1e-8)
-        return vec3(-1.0);   // valor "fora" para o teste dar falso
+        return vec3(-1.0);   // valor fora para o teste dar falso
 
     float alpha1 = ((b.z - c.z) * (p.x - c.x) + (c.x - b.x) * (p.z - c.z)) / den;
     float alpha2 = ((c.z - a.z) * (p.x - c.x) + (a.x - c.x) * (p.z - c.z)) / den;
@@ -130,8 +130,7 @@ void main()
 {
     float ar = iResolution.x / iResolution.y;
         vec2 uv = (gl_FragCoord.xy / iResolution.xy * 2. - 1.) * vec2(ar, 1.);
-        // Posição do mouse no mesmo sistema de coordenadas do uv e do triângulo.
-        // (antes só valia com o botão esquerdo apertado)
+        // Posição do mouse no mesmo sistema de coordenadas do uv e do triângulo
         vec2 mc = (iMouse.xy / iResolution.xy * 2. - 1.) * vec2(ar, 1.);
 
 
@@ -162,11 +161,11 @@ void main()
           color = vec3(0.0, 0.0, 1.0);
 
     // t0 = mouse está dentro do triângulo?   t1 = este pixel está dentro do triângulo?
-    // Preenchimento do triângulo: muda de cor conforme o mouse esteja dentro ou fora.
-    vec3 fill = t0 ? COL2 : COL0;            // dentro: amarelo/laranja | fora: azul
-    vec3 col  = t1 ? fill : vec3(0.08);      // fora do triângulo: fundo escuro
+    // Preenchimento do triângulo: muda de cor conforme o mouse esteja dentro ou fora
+    vec3 fill = t0 ? COL2 : COL0;            // dentro amarelo/laranja | fora: azul
+    vec3 col  = t1 ? fill : vec3(0.08);      // fora do triângulo fundo escuro
 
-    // Arestas e vértices (debug) desenhados por cima de tudo.
+    // Arestas e vértices (debug) desenhados por cima de tudo
     if (color != vec3(0.0))
         col = color;
 
